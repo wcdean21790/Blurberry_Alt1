@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const button2 = document.getElementById("button2");
     const button3 = document.getElementById("button3");
     const button4 = document.getElementById("button4");
+    const button5 = document.getElementById("button5");
 
     button1.addEventListener("click", function () {
         // Code to execute when Button 1 is clicked
@@ -17,6 +18,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     button4.addEventListener("click", function () {
+        // Code to execute when Button 4 is clicked
+    });
+
+    button5.addEventListener("click", function () {
         // Code to execute when Button 4 is clicked
     });
 });
