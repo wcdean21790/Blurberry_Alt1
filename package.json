@@ -1,0 +1,12 @@
+{
+  "name": "Blurberry_Alt1",
+  "version": "1.0.0",
+  "description": "Alt1 - Blurberry",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
