@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const button4 = document.getElementById("button4");
     const button5 = document.getElementById("button5");
 
-    button1.addEventListener("click", function () {
-        // Code to execute when Button 1 is clicked
-    });
+
+button1.addEventListener("click", function () {
+    // Redirect to the namepricecheck.html file
+    window.location.href = "namepricecheck.html";
+});
 
     button2.addEventListener("click", function () {
         // Code to execute when Button 2 is clicked
