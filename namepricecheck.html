@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Label and Button Example</title>
+</head>
+<body>
+
+<label for="name">Name:</label>
+<span id="nameValue">John Doe</span><br>
+
+<label>X:</label>
+<span id="xValuePlaceholder">Placeholder for X</span><br>
+
+<label for="price">Price:</label>
+<span id="priceValue">Placeholder for Price</span><br>
+
+<label>Y:</label>
+<span id="yValuePlaceholder">Placeholder for Y</span><br>
+
+<button id="sendButton">Send</button>
+<button id="cancelButton">Cancel</button>
+
+<script>
+document.getElementById("sendButton").addEventListener("click", function() {
+    // Replace these values with the actual values you want to set for X and Y
+    var xValue = 42;
+    var yValue = 75;
+
+    // Update the placeholders with the new values
+    document.getElementById("xValuePlaceholder").textContent = xValue;
+    document.getElementById("yValuePlaceholder").textContent = yValue;
+});
+
+document.getElementById("cancelButton").addEventListener("click", function() {
+    // Reset the placeholders to default
+    document.getElementById("xValuePlaceholder").textContent = "Placeholder for X";
+    document.getElementById("yValuePlaceholder").textContent = "Placeholder for Y";
+});
+</script>
+
+</body>
+</html>
