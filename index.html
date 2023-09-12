@@ -3,34 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Blurberry Screen Capture</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Include any necessary CSS and JavaScript files -->
 </head>
 <body>
 <div class="container">
     <h1>Blurberry Screen Capture</h1>
-
     <div class="button">
-        <a>NIB</a> <!-- asijasdjasdj -->
-        <a>NIS</a>
-        <a>INB</a>
-        <a>INS</a>
+        <!-- Create a button with an ID to trigger the action -->
+        <button id="nibButton">NIB</button>
     </div>
-    <a>INB & INS</a>
     <span>
-        <strong>Item Name</strong>
-        <p>[Name]</p>
-    </span>
+            <strong>Item Name</strong>
+            <p id="itemName">[Name]</p>
+        </span>
     <span>
-        <strong>High Price</strong>
-        <p>[HPrice]</p>
-    </span>
+            <strong>High Price</strong>
+            <p id="highPrice">[HPrice]</p>
+        </span>
     <span>
-        <strong>Low Price</strong>
-        <p>[LPrice]</p>
-    </span>
+            <strong>Low Price</strong>
+            <p id="lowPrice">[LPrice]</p>
+        </span>
     <a>send</a>
     <a>reset/scan</a>
 </div>
+
+<!-- Include any necessary JavaScript libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pyautogui/0.9.53/pyautogui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.4.0/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.4.0/tesseract.min.js"></script>
+<script>
+    // Define a function to handle the NIB button click event
+    document.getElementById('nibButton').addEventListener('click', function () {
+        // Capture a screenshot
+        let x1 = 215 * initialize.scaling_factor;
+        let y1 = 210 * initialize.scaling_factor;
+        let width1 = 215 * initialize.scaling_factor;
+        let height1 = 25 * initialize.scaling_factor;
+
+        let itemnamescreenshotpre = document.createElement('canvas');
+        itemnamescreenshotpre.width = width1;
+        itemnamescreenshotpre.height = height1;
+        let context = itemnamescreenshotpre.getContext('2d');
+
+        context.drawImage(document.documentElement, x1, y1, width1, height1, 0, 0, width1, height1);
+
+        // Convert the screenshot to base64
+        let itemnamescreenshotbase64 = itemnamescreenshotpre.toDataURL();
+
+        // Use Tesseract.js to extract text from the screenshot
+        Tesseract.recognize(itemnamescreenshotbase64, 'eng', {
+            logger: info => console.log(info)
+        }).then(({ data: { text } }) => {
+            let itemnamescreenshotname = text.trim().replace(/[^a-zA-Z ]/g, '');
+            console.log(`OCR Result: ${itemnamescreenshotname}`);
+
+            // Update the HTML element with the extracted item name
+            document.getElementById('itemName').textContent = itemnamescreenshotname;
+        });
+    });
+</script>
 
 </body>
 </html>
