@@ -4,33 +4,72 @@
     <meta charset="UTF-8">
     <title>Blurberry Screen Capture</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>Blurberry Screen Capture</h1>
 
     <div class="button">
-        <a>NIB</a> <!-- asijasdjasdj -->
-        <a>NIS</a>
-        <a>INB</a>
-        <a>INS</a>
+        <button id="nibButton">NIB</button>
+        <button id="nisButton">NIS</button>
+        <button id="inbButton">INB</button>
+        <button id="insButton">INS</button>
     </div>
-    <a>INB & INS</a>
-    <span>
+
+    <!-- Rest of your HTML content -->
+
+    <span class="item-name">
         <strong>Item Name</strong>
         <p>[Name]</p>
     </span>
-    <span>
+    <span class="price">
         <strong>High Price</strong>
         <p>[HPrice]</p>
     </span>
-    <span>
-        <strong>Low Price</strong>
-        <p>[LPrice]</p>
-    </span>
-    <a>send</a>
-    <a>reset/scan</a>
 </div>
 
+<!-- JavaScript section -->
+<script>
+    // Function to extract item name
+    function extractItemName() {
+        const itemNameRegion = document.querySelector('.item-name'); // Replace with the actual selector
+        html2canvas(itemNameRegion).then(canvas => {
+            const itemNameScreenshot = canvas.toDataURL('image/png');
+
+            Tesseract.recognize(
+                itemNameScreenshot,
+                'eng',
+                { logger: info => console.log(info) }
+            ).then(({ data: { text } }) => {
+                const itemName = text.trim().replace(/[^a-zA-Z ]/g, '');
+                console.log(`OCR Result (Item Name): ${itemName}`);
+            });
+        });
+    }
+
+    // Function to extract price
+    function extractPrice() {
+        const priceRegion = document.querySelector('.price'); // Replace with the actual selector
+        html2canvas(priceRegion).then(canvas => {
+            const priceScreenshot = canvas.toDataURL('image/png');
+
+            Tesseract.recognize(
+                priceScreenshot,
+                'eng',
+                { logger: info => console.log(info) }
+            ).then(({ data: { text } }) => {
+                const priceString = text.trim().replace(/\D/g, '');
+                const priceInt = parseInt(priceString);
+                console.log(`Price: ${priceInt}`);
+            });
+        });
+    }
+
+    // Add click event listeners to the buttons
+    document.getElementById("nibButton").addEventListener("click", extractItemName);
+    document.getElementById("nibButton").addEventListener("click", extractPrice);
+</script>
 </body>
 </html>
