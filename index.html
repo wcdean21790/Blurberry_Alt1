@@ -45,7 +45,22 @@
             ).then(({ data: { text } }) => {
                 const itemName = text.trim().replace(/[^a-zA-Z ]/g, '');
                 console.log(`OCR Result (Item Name): ${itemName}`);
+                if (itemName === "") {
+                    // Set error text
+                    document.querySelector('.item-name p').textContent = "Error";
+                } else {
+                    // Set the extracted text
+                    document.querySelector('.item-name p').textContent = itemName;
+                }
+            }).catch(error => {
+                console.error("Error in OCR:", error);
+                // Set error text
+                document.querySelector('.item-name p').textContent = "Error";
             });
+        }).catch(error => {
+            console.error("Error in capturing screenshot:", error);
+            // Set error text
+            document.querySelector('.item-name p').textContent = "Error";
         });
     }
 
@@ -63,7 +78,22 @@
                 const priceString = text.trim().replace(/\D/g, '');
                 const priceInt = parseInt(priceString);
                 console.log(`Price: ${priceInt}`);
+                if (isNaN(priceInt)) {
+                    // Set error text
+                    document.querySelector('.price p').textContent = "Error";
+                } else {
+                    // Set the extracted text
+                    document.querySelector('.price p').textContent = priceInt;
+                }
+            }).catch(error => {
+                console.error("Error in OCR:", error);
+                // Set error text
+                document.querySelector('.price p').textContent = "Error";
             });
+        }).catch(error => {
+            console.error("Error in capturing screenshot:", error);
+            // Set error text
+            document.querySelector('.price p').textContent = "Error";
         });
     }
 
