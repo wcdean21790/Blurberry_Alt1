@@ -7,21 +7,33 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f7f7f7;
+    background: #061a26;
     font-family: "Roboto Light", sans-serif;
 }
 
-.button {
-    padding-bottom: 30px;
+/* Add CSS to style the buttons */
+.button button {
+    border-radius: 20px; /* Adjust the value to control the roundness */
+    background-color: #162991;
+    color: #000000; /* Text color */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none; /* Remove border */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    margin: 5px; /* Add some margin to separate buttons */
+}
+
+/* Add hover effect */
+.button button:hover {
+    background-color: darkgreen; /* Change the background color on hover */
 }
 
 .container {
     width: 50%;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #061a26;
     border-radius: 10px;
     text-align: center;
-    background: #fff;
+    background: #061a26;
 }
 
 .container h1 {
@@ -35,7 +47,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     text-decoration: none;
-    color: #333;
+    color: #b0ffe9;
     font-weight: bold;
 }
 
@@ -73,6 +85,8 @@ a:hover {
     display: block;
     margin-bottom: 5px;
 }
+
+
 
 .container span p {
     margin: 0;

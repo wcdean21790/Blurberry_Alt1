@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blurberry Screen Capture</title>
+    <title>Blurberry Price Storing</title>
     <link rel="stylesheet" href="css/styles.css">
 
     <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
@@ -14,20 +14,17 @@
 </head>
 <body>
 <div class="container">
-    <h1>Blurberry Price Store</h1>
+    <h1 class="red-text">Blurberry Price Storing</h1>
 
-    <div class="button">
-        <button id="nibButton">NIB</button>
-        <button id="nisButton">NIS</button>
-        <button id="inbButton">INB</button>
-        <button id="insButton">INS</button>
-    </div>
-
-    <!-- Create a form with text fields -->
-    <form id="itemForm">
+        <form id="itemForm">
+        <div>
+            <label for="groupName">Group Name:</label><br>
+            <input type="text" id="groupName" name="groupName" value="Public"> <!-- Autofill with "Public" -->
+        </div>
         <div>
             <label for="itemName">Item Name:</label><br>
             <input type="text" id="itemName" name="itemName">
+            <ul id="suggestions"></ul>
         </div>
         <div>
             <label for="Price">High Price:</label><br>
@@ -36,12 +33,52 @@
     </form>
 
     <div class="button">
-        <!-- Add buttons for "Send" and "Reset/Scan" -->
-        <button id="sendButton">Send</button>
+        <button id="nibButton">NIB</button>
+        <button id="nisButton">NIS</button>
+        <button id="inbButton">INB</button>
+        <button id="insButton">INS</button>
     </div>
+
 </div>
 
-<!-- Include Firebase SDK -->
+<script>
+    const inputField = document.getElementById("itemName");
+    const suggestionList = document.getElementById("suggestions");
+
+    // Fetch the data when the page loads
+    let data = null;
+    fetchData();
+
+    function fetchData() {
+        fetch('https://runescape.wiki/w/Module:GEVolumes/data.json?action=raw')
+            .then(response => response.json())
+            .then(jsonData => {
+                data = jsonData;
+            })
+            .catch(error => console.error(error));
+    }
+
+    // Event listener for input field changes
+    inputField.addEventListener("input", () => {
+        const searchValue = inputField.value.toLowerCase();
+        suggestionList.innerHTML = ""; // Clear previous suggestions
+
+        if (data) {
+            // Filter data based on user input (case-insensitive)
+            const filteredData = Object.values(data).filter(item => item.name.toLowerCase().includes(searchValue));
+
+            // Display suggestions
+            filteredData.forEach(item => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.textContent = item.name;
+                suggestionList.appendChild(suggestionItem);
+            });
+        }
+    });
+
+
+</script>
+
 <script>
     // Your web app's Firebase configuration
     var firebaseConfig = {
@@ -64,25 +101,166 @@
     // Reference to the Firebase Realtime Database
     var database = firebase.database();
 
-    // Add an event listener to the "Send" button
-    document.getElementById("sendButton").addEventListener("click", function () {
+    // NIB button
+    document.getElementById("nibButton").addEventListener("click", function () {
+        // Get values from the text fields
+        var groupName = document.getElementById("groupName").value;
+        var itemName = document.getElementById("itemName").value;
+        var price = document.getElementById("Price").value;
 
-            // Get values from the text fields
-            var itemName = document.getElementById("itemName").value;
-            var price = document.getElementById("Price").value;
+        // Get the Firebase database reference for the itemName
+        var itemRef = database.ref(groupName).child(itemName);
 
-            // Create a new entry in the Firebase database under "items"
-            var newItemRef = database.ref("items").push();
-            newItemRef.set({
-                itemName: itemName,
-                price: price
-            });
+        var now = new Date();
+        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        var day = String(now.getDate()).padStart(2, '0');
+        var hour = String(now.getHours()).padStart(2, '0');
+        var minute = String(now.getMinutes()).padStart(2, '0');
 
-            // Clear the text fields after sending
+        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+
+        // Generate a unique key for the itemDescription using a timestamp
+        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+
+        var itemDescription = `NIB ${itemName} for ${price} at ${currentTime}`;
+
+        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
+        itemRef.once('value').then(function(snapshot) {
+            var existingData = snapshot.val() || [];
+
+            // Add the new itemDescription to the array
+            existingData.push(itemDescription);
+
+            // Update the data under itemName with the updated array
+            itemRef.set(existingData);
+        });
+
+    // Clear the text fields after sending
             document.getElementById("itemName").value = "";
             document.getElementById("Price").value = "";
 
-            alert("Data sent to Firebase!");
+            alert(`Data: ${itemName} NIB for ${price} to group "${groupName}" successfully sent to Blurberry!`);
+    });
+
+    document.getElementById("nisButton").addEventListener("click", function () {
+        // Get values from the text fields
+        var groupName = document.getElementById("groupName").value;
+        var itemName = document.getElementById("itemName").value;
+        var price = document.getElementById("Price").value;
+
+        // Get the Firebase database reference for the itemName
+        var itemRef = database.ref(groupName).child(itemName);
+
+        var now = new Date();
+        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        var day = String(now.getDate()).padStart(2, '0');
+        var hour = String(now.getHours()).padStart(2, '0');
+        var minute = String(now.getMinutes()).padStart(2, '0');
+
+        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+
+        // Generate a unique key for the itemDescription using a timestamp
+        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+
+        var itemDescription = `NIS ${itemName} for ${price} at ${currentTime}`;
+
+        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
+        itemRef.once('value').then(function(snapshot) {
+            var existingData = snapshot.val() || [];
+
+            // Add the new itemDescription to the array
+            existingData.push(itemDescription);
+
+            // Update the data under itemName with the updated array
+            itemRef.set(existingData);
+        });
+
+        // Clear the text fields after sending
+        document.getElementById("itemName").value = "";
+        document.getElementById("Price").value = "";
+
+        alert(`Data: NIS ${itemName} for ${price} successfully sent to Blurberry!`);
+    });
+
+    //INB
+    document.getElementById("inbButton").addEventListener("click", function () {
+        // Get values from the text fields
+        var groupName = document.getElementById("groupName").value;
+        var itemName = document.getElementById("itemName").value;
+        var price = document.getElementById("Price").value;
+
+        // Get the Firebase database reference for the itemName
+        var itemRef = database.ref(groupName).child(itemName);
+
+        var now = new Date();
+        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        var day = String(now.getDate()).padStart(2, '0');
+        var hour = String(now.getHours()).padStart(2, '0');
+        var minute = String(now.getMinutes()).padStart(2, '0');
+
+        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+
+        // Generate a unique key for the itemDescription using a timestamp
+        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+
+        var itemDescription = `INB ${itemName} for ${price} at ${currentTime}`;
+
+        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
+        itemRef.once('value').then(function(snapshot) {
+            var existingData = snapshot.val() || [];
+
+            // Add the new itemDescription to the array
+            existingData.push(itemDescription);
+
+            // Update the data under itemName with the updated array
+            itemRef.set(existingData);
+        });
+
+        // Clear the text fields after sending
+        document.getElementById("itemName").value = "";
+        document.getElementById("Price").value = "";
+
+        alert(`Data: INB ${itemName} for ${price} successfully sent to Blurberry!`);
+    });
+
+    document.getElementById("insButton").addEventListener("click", function () {
+        // Get values from the text fields
+        var groupName = document.getElementById("groupName").value;
+        var itemName = document.getElementById("itemName").value;
+        var price = document.getElementById("Price").value;
+
+        // Get the Firebase database reference for the itemName
+        var itemRef = database.ref(groupName).child(itemName);
+
+        var now = new Date();
+        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        var day = String(now.getDate()).padStart(2, '0');
+        var hour = String(now.getHours()).padStart(2, '0');
+        var minute = String(now.getMinutes()).padStart(2, '0');
+
+        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+
+        // Generate a unique key for the itemDescription using a timestamp
+        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+
+        var itemDescription = `INS ${itemName} for ${price} at ${currentTime}`;
+
+        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
+        itemRef.once('value').then(function(snapshot) {
+            var existingData = snapshot.val() || [];
+
+            // Add the new itemDescription to the array
+            existingData.push(itemDescription);
+
+            // Update the data under itemName with the updated array
+            itemRef.set(existingData);
+        });
+
+        // Clear the text fields after sending
+        document.getElementById("itemName").value = "";
+        document.getElementById("Price").value = "";
+
+        alert(`Data: ${itemName} INS for ${price} successfully sent to Blurberry!`);
     });
 </script>
 </body>
