@@ -109,163 +109,165 @@
         // Get values from the text fields
         const groupName = document.getElementById("groupName").value;
         const itemName = document.getElementById("itemName").value;
-        const price = document.getElementById("Price").value;
+        const price = parseFloat(document.getElementById("Price").value); // Parse price as a float
 
-        // Get the Firebase database reference for the itemName
-        const itemRef = database.ref(groupName).child(itemName);
+        // Get the Firebase database reference for the itemName and its "NIBData" child node
+        const itemRef = database.ref(groupName).child(itemName).child("NIBData");
+        const itemRef2 = database.ref(groupName).child(itemName);
 
         const now = new Date();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
-        const day = String(now.getDate()).padStart(2, '0');
-        const hour = String(now.getHours()).padStart(2, '0');
-        const minute = String(now.getMinutes()).padStart(2, '0');
 
-        const currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+        // Use UTC methods to get date and time components
+        const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        const utcDay = String(now.getUTCDate()).padStart(2, '0');
+        const utcHour = String(now.getUTCHours()).padStart(2, '0');
+        const utcMinute = String(now.getUTCMinutes()).padStart(2, '0');
+
+        const currentTime = `${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`;
 
         // Generate a unique key for the itemDescription using a timestamp
         const uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
 
-        const itemDescription = `NIB ${itemName} for ${price} at ${currentTime}`;
+        const itemDescription = `Alt1: NIB ${itemName} for ${price} at ${currentTime} (UTC)`;
+        const NIBGraph = {
+            'price': price,
+            'time': currentTime
+        }
 
-        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
-        itemRef.once('value').then(function(snapshot) {
-            var existingData = snapshot.val() || [];
-
-            // Add the new itemDescription to the array
-            existingData.push(itemDescription);
-
-            // Update the data under itemName with the updated array
-            itemRef.set(existingData);
-        });
+        // Push the new data to the "NIBData" child node, which appends it to the existing data
+        itemRef.push().set(NIBGraph);
+        itemRef2.push().set(itemDescription)
 
         // Clear the text fields after sending
         document.getElementById("itemName").value = "";
         document.getElementById("Price").value = "";
 
         // Change the label text to match the alert message
-        document.querySelector('label[for="DoubleCheck"]').textContent = `Data: ${itemName} NIB for ${price} to group "${groupName}" successfully sent to Blurberry!`;
+        document.querySelector('label[for="DoubleCheck"]').textContent = `${itemName} NIB for ${price} to group "${groupName}" successfully sent to Blurberry!`;
     });
-
 
     document.getElementById("nisButton").addEventListener("click", function () {
         // Get values from the text fields
-        var groupName = document.getElementById("groupName").value;
-        var itemName = document.getElementById("itemName").value;
-        var price = document.getElementById("Price").value;
+        const groupName = document.getElementById("groupName").value;
+        const itemName = document.getElementById("itemName").value;
+        const price = parseFloat(document.getElementById("Price").value); // Parse price as a float
 
-        // Get the Firebase database reference for the itemName
-        var itemRef = database.ref(groupName).child(itemName);
+        // Get the Firebase database reference for the itemName and its "NISData" child node
+        const itemRef = database.ref(groupName).child(itemName).child("NISData");
+        const itemRef2 = database.ref(groupName).child(itemName);
 
-        var now = new Date();
-        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
-        var day = String(now.getDate()).padStart(2, '0');
-        var hour = String(now.getHours()).padStart(2, '0');
-        var minute = String(now.getMinutes()).padStart(2, '0');
+        const now = new Date();
 
-        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+        // Use UTC methods to get date and time components
+        const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        const utcDay = String(now.getUTCDate()).padStart(2, '0');
+        const utcHour = String(now.getUTCHours()).padStart(2, '0');
+        const utcMinute = String(now.getUTCMinutes()).padStart(2, '0');
+
+        const currentTime = `${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`;
 
         // Generate a unique key for the itemDescription using a timestamp
-        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+        const uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
 
-        var itemDescription = `NIS ${itemName} for ${price} at ${currentTime}`;
+        const itemDescription = `Alt1: NIS ${itemName} for ${price} at ${currentTime} (UTC)`;
+        const NISGraph = {
+            'price': price,
+            'time': currentTime
+        }
 
-        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
-        itemRef.once('value').then(function(snapshot) {
-            var existingData = snapshot.val() || [];
-
-            // Add the new itemDescription to the array
-            existingData.push(itemDescription);
-
-            // Update the data under itemName with the updated array
-            itemRef.set(existingData);
-        });
+        // Push the new data to the "NISData" child node, which appends it to the existing data
+        itemRef.push().set(NISGraph);
+        itemRef2.push().set(itemDescription)
 
         // Clear the text fields after sending
         document.getElementById("itemName").value = "";
         document.getElementById("Price").value = "";
 
-        alert(`Data: NIS ${itemName} for ${price} successfully sent to Blurberry!`);
+        // Change the label text to match the alert message
+        document.querySelector('label[for="DoubleCheck"]').textContent = `${itemName} NIS for ${price} to group "${groupName}" successfully sent to Blurberry!`;
     });
 
     //INB
     document.getElementById("inbButton").addEventListener("click", function () {
         // Get values from the text fields
-        var groupName = document.getElementById("groupName").value;
-        var itemName = document.getElementById("itemName").value;
-        var price = document.getElementById("Price").value;
+        const groupName = document.getElementById("groupName").value;
+        const itemName = document.getElementById("itemName").value;
+        const price = parseFloat(document.getElementById("Price").value); // Parse price as a float
 
-        // Get the Firebase database reference for the itemName
-        var itemRef = database.ref(groupName).child(itemName);
+        // Get the Firebase database reference for the itemName and its "INBData" child node
+        const itemRef = database.ref(groupName).child(itemName).child("INBData");
+        const itemRef2 = database.ref(groupName).child(itemName);
 
-        var now = new Date();
-        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
-        var day = String(now.getDate()).padStart(2, '0');
-        var hour = String(now.getHours()).padStart(2, '0');
-        var minute = String(now.getMinutes()).padStart(2, '0');
+        const now = new Date();
 
-        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+        // Use UTC methods to get date and time components
+        const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        const utcDay = String(now.getUTCDate()).padStart(2, '0');
+        const utcHour = String(now.getUTCHours()).padStart(2, '0');
+        const utcMinute = String(now.getUTCMinutes()).padStart(2, '0');
+
+        const currentTime = `${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`;
 
         // Generate a unique key for the itemDescription using a timestamp
-        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+        const uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
 
-        var itemDescription = `INB ${itemName} for ${price} at ${currentTime}`;
+        const itemDescription = `Alt1: INB ${itemName} for ${price} at ${currentTime} (UTC)`;
+        const INBGraph = {
+            'price': price,
+            'time': currentTime
+        }
 
-        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
-        itemRef.once('value').then(function(snapshot) {
-            var existingData = snapshot.val() || [];
-
-            // Add the new itemDescription to the array
-            existingData.push(itemDescription);
-
-            // Update the data under itemName with the updated array
-            itemRef.set(existingData);
-        });
+        // Push the new data to the "INBData" child node, which appends it to the existing data
+        itemRef.push().set(INBGraph);
+        itemRef2.push().set(itemDescription)
 
         // Clear the text fields after sending
         document.getElementById("itemName").value = "";
         document.getElementById("Price").value = "";
 
-        alert(`Data: INB ${itemName} for ${price} successfully sent to Blurberry!`);
+        // Change the label text to match the alert message
+        document.querySelector('label[for="DoubleCheck"]').textContent = `${itemName} INB for ${price} to group "${groupName}" successfully sent to Blurberry!`;
     });
 
     document.getElementById("insButton").addEventListener("click", function () {
         // Get values from the text fields
-        var groupName = document.getElementById("groupName").value;
-        var itemName = document.getElementById("itemName").value;
-        var price = document.getElementById("Price").value;
+        const groupName = document.getElementById("groupName").value;
+        const itemName = document.getElementById("itemName").value;
+        const price = parseFloat(document.getElementById("Price").value); // Parse price as a float
 
-        // Get the Firebase database reference for the itemName
-        var itemRef = database.ref(groupName).child(itemName);
+        // Get the Firebase database reference for the itemName and its "INSData" child node
+        const itemRef = database.ref(groupName).child(itemName).child("INSData");
+        const itemRef2 = database.ref(groupName).child(itemName);
 
-        var now = new Date();
-        var month = String(now.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
-        var day = String(now.getDate()).padStart(2, '0');
-        var hour = String(now.getHours()).padStart(2, '0');
-        var minute = String(now.getMinutes()).padStart(2, '0');
+        const now = new Date();
 
-        var currentTime = month + '-' + day + ' ' + hour + ':' + minute;
+        // Use UTC methods to get date and time components
+        const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+        const utcDay = String(now.getUTCDate()).padStart(2, '0');
+        const utcHour = String(now.getUTCHours()).padStart(2, '0');
+        const utcMinute = String(now.getUTCMinutes()).padStart(2, '0');
+
+        const currentTime = `${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`;
 
         // Generate a unique key for the itemDescription using a timestamp
-        var uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
+        const uniqueKey = Date.now(); // You can use other methods to generate a unique key if needed
 
-        var itemDescription = `INS ${itemName} for ${price} at ${currentTime}`;
+        const itemDescription = `Alt1: INS ${itemName} for ${price} at ${currentTime} (UTC)`;
+        const INSGraph = {
+            'price': price,
+            'time': currentTime
+        }
 
-        // Read the existing data under itemName, or initialize an empty array if it doesn't exist
-        itemRef.once('value').then(function(snapshot) {
-            var existingData = snapshot.val() || [];
-
-            // Add the new itemDescription to the array
-            existingData.push(itemDescription);
-
-            // Update the data under itemName with the updated array
-            itemRef.set(existingData);
-        });
+        // Push the new data to the "INSData" child node, which appends it to the existing data
+        itemRef.push().set(INSGraph);
+        itemRef2.push().set(itemDescription)
 
         // Clear the text fields after sending
         document.getElementById("itemName").value = "";
         document.getElementById("Price").value = "";
 
-        alert(`Data: ${itemName} INS for ${price} successfully sent to Blurberry!`);
+        // Change the label text to match the alert message
+        document.querySelector('label[for="DoubleCheck"]').textContent = `${itemName} INS for ${price} to group "${groupName}" successfully sent to Blurberry!`;
     });
 </script>
 </body>
