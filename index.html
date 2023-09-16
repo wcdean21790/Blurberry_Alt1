@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Blurberry Screen Capture</title>
     <link rel="stylesheet" href="css/styles.css">
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
+
+
+
 </head>
 <body>
 <div class="container">
-    <h1>Blurberry Screen Capture</h1>
+    <h1>Blurberry Price Store</h1>
 
     <div class="button">
         <button id="nibButton">NIB</button>
@@ -15,69 +22,68 @@
         <button id="inbButton">INB</button>
         <button id="insButton">INS</button>
     </div>
-    <a>INB & INS</a>
-    <span>
-        <strong>Item Name</strong>
-        <p id="itemName">[Name]</p>
-    </span>
-    <span>
-        <strong>High Price</strong>
-        <p id="highPrice">[HPrice]</p>
-    </span>
-    <span>
-        <strong>Low Price</strong>
-        <p id="lowPrice">[LPrice]</p>
-    </span>
-    <a>send</a>
-    <a>reset/scan</a>
+
+    <!-- Create a form with text fields -->
+    <form id="itemForm">
+        <div>
+            <label for="itemName">Item Name:</label><br>
+            <input type="text" id="itemName" name="itemName">
+        </div>
+        <div>
+            <label for="Price">High Price:</label><br>
+            <input type="text" id="Price" name="Price">
+        </div>
+    </form>
+
+    <div class="button">
+        <!-- Add buttons for "Send" and "Reset/Scan" -->
+        <button id="sendButton">Send</button>
+    </div>
 </div>
 
-<!-- JavaScript section -->
+<!-- Include Firebase SDK -->
 <script>
-    // Function to extract item name
-    function extractItemName() {
-        const itemNameRegion = document.querySelector('.item-name'); // Replace with the actual selector
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyCCjz1hverI38TyKuRQO5X0zXAnr9JeVKQ",
+        authDomain: "blurberry-d3319.firebaseapp.com",
+        databaseURL: "https://blurberry-d3319-default-rtdb.firebaseio.com",
+        projectId: "blurberry-d3319",
+        storageBucket: "blurberry-d3319.appspot.com",
+        messagingSenderId: "94481796837",
+        appId: "1:94481796837:web:7f411d5c6b5706aa5b8e0c",
+        measurementId: "G-47X6BQ4WT8"
+    };
 
-        // Capture screenshot of the item name region
-        html2canvas(itemNameRegion).then(canvas => {
-            const itemNameScreenshot = canvas.toDataURL('image/png');
+    // Initialize Firebase
+    var firebaseApp = firebase.initializeApp(firebaseConfig);
 
-            // Perform OCR on the captured screenshot
-            Tesseract.recognize(
-                itemNameScreenshot,
-                'eng',
-                { logger: info => console.log(info) }
-            ).then(({ data: { text } }) => {
-                const itemName = text.trim().replace(/[^a-zA-Z ]/g, '');
-                console.log(`OCR Result (Item Name): ${itemName}`);
+    // Initialize Firebase Authentication
+    var auth = firebase.auth();
+
+    // Reference to the Firebase Realtime Database
+    var database = firebase.database();
+
+    // Add an event listener to the "Send" button
+    document.getElementById("sendButton").addEventListener("click", function () {
+
+            // Get values from the text fields
+            var itemName = document.getElementById("itemName").value;
+            var price = document.getElementById("Price").value;
+
+            // Create a new entry in the Firebase database under "items"
+            var newItemRef = database.ref("items").push();
+            newItemRef.set({
+                itemName: itemName,
+                price: price
             });
-        });
-    }
 
-    // Function to simulate price extraction
-    function extractPrice() {
-        const priceRegion = document.querySelector('.price'); // Replace with the actual selector
+            // Clear the text fields after sending
+            document.getElementById("itemName").value = "";
+            document.getElementById("Price").value = "";
 
-        // Capture screenshot of the price region
-        html2canvas(priceRegion).then(canvas => {
-            const priceScreenshot = canvas.toDataURL('image/png');
-
-            // Perform OCR on the captured screenshot
-            Tesseract.recognize(
-                priceScreenshot,
-                'eng',
-                { logger: info => console.log(info) }
-            ).then(({ data: { text } }) => {
-                const priceString = text.trim().replace(/\D/g, '');
-                const priceInt = parseInt(priceString);
-                console.log(`Price: ${priceInt}`);
-            });
-        });
-    }
-
-    // Add click event listeners to the buttons
-    document.getElementById("nibButton").addEventListener("click", extractItemName);
-    document.getElementById("nibButton").addEventListener("click", extractPrice);
+            alert("Data sent to Firebase!");
+    });
 </script>
 </body>
 </html>
